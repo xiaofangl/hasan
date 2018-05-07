@@ -1,0 +1,20 @@
+---
+
+- name: get_package
+
+  hosts: "{{host}}"
+
+  sudo: yes
+
+  tasks:
+    - name: download "{{host}}"
+
+      command: wget http://192.168.100.42:55555/download/huasheng_jave_test/hshc-regserver-1.0.0-SNAPSHOT.jar-.tat.gz /tmp
+#      command: tar zxvf /tmp/hshc-regserver-1.0.0-SNAPSHOT.jar-.tat.gz -C /opt
+      command: ifconfig
+      command: echo " this playbook yml"
+
+    - name: start server
+
+#       script: /tmp/start.sh
+      command: echo " this playbook yml server"

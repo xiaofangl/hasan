@@ -1,0 +1,55 @@
+# author: xiaofangliu
+# date: 2018-02-23
+上线流程
+1）在数据库创建dns主机记录
+2）格式化文件，检查文件跟主机的对应关系
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+formant_script 脚本在 tools/ 目录下，第一次拷贝过来的文件可以放在这里
+注意 跑 format_script脚本的时候格式为：
+
+(huasheng) ┌─[xiaofangl@xiaofangldeMacBook-Pro] - [~/Downloads/huasheng/hasan/djapi/tools] - [2018-03-08 10:26:03]
+└─[0] <git:(xiaofangliu 988d8b2✱✈) > ls
+__init__.py      __init__.pyc     format_script.py helper.py        helper.pyc       run.py           temp.zone        test.xxx.zone
+(huasheng) ┌─[xiaofangl@xiaofangldeMacBook-Pro] - [~/Downloads/huasheng/hasan/djapi/tools] - [2018-03-08 10:26:07]
+└─[0] <git:(xiaofangliu 988d8b2✱✈) > python format_script.py 192.168.99.251 test.xxx.zone
+
+注意：
+    每执行一次 创建一个数据库记录
+
+    第一个参数是格式化脚本本身，第二个参数为实际的dns服务器ip.在db中存在的ip地址，才能在格式化的时候把文件跟ip的对应关系写进去。
+    第三个参数是从第二个参数服务器拿来的zone文件；
+
+
+生成的文件为： 199_huashenghaoche.com.zone；文件结尾会多一个空格删掉.然后要到list方法中添加文件名到name_list列表中；
+
+1. hasan上的.zone文件是从dns服务器上同步过来的，dns同步文件的时候的命名规则为：
+
+    ip_filename
+
+    ip:
+        ip地址的第一个字符如：
+        192或 172
+    filename:
+        即dns 服务器上的具体文件名称
+    如：
+    172_huashenghaoche.com.zone
+    即 172服务器上的huashenghaoche.com.zone文件
+
+
+2. dns操作
+    记录
+        -以一个zone文件为一个操作单元，可以针对此文件进行 解析记录的增加或删除
+    文件
+        -操作zone文件的，针对主机上的zone 文件进行 新建 删除，将hasan本地的zone文件同步到dns
+
+
+
+3. 运行
+    首先执行1.操作，将文件同步过来之后，执行文件格式化脚本，生成hasan可操作的文件格式；
+    进行增加、删除记录和增加、删除、修改、同步操作时，hasan会将本地的zone文件同步到相应的dns服务器上，
+    并在dns服务器本地reload！
+
+
++++！！！
+如dns服务器地址更换 需更换fab主机地址，好的方法是用域名

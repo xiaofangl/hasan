@@ -1,0 +1,29 @@
+# use glob syntax.
+syntax: glob
+
+local.py
+node_modules
+
+webdist*
+.idea/
+.DS_Store
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.log
+./djapi/private-media/
+./djapi/static/
+logs*
+sevenm
+ninem
+ninet
+ninek
+dis_test.txt
+199_huasheng*
+djapi/dns_api/*.zone
+*.zone
+*._bak
+199*
+*.zone
+*.xlsx
