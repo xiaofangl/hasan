@@ -43,6 +43,43 @@ def execute_command(cmdstring, cwd=None, timeout=None, shell=False):
     return str(sub.returncode)
 
 
+def execute_command_2(cmdstring, timeout=None, shell=False):
+    """执行一个SHELL命令
+        封装了subprocess的Popen方法, 支持超时判断，支持读取stdout和stderr
+        参数:
+      cwd: 运行命令时更改路径，如果被设定，子进程会直接先更改当前路径到cwd
+      timeout: 超时时间，秒，支持小数，精度0.1秒
+      shell: 是否通过shell运行
+    Returns: return_code
+    Raises: Exception: 执行超时
+    """
+    res = {}
+    if shell:
+        cmdstring_list = cmdstring
+    else:
+        cmdstring_list = shlex.split(cmdstring)
+    if timeout:
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+
+    # ；
+    sub = subprocess.Popen(cmdstring_list, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    # subprocess.poll()方法：检查子进程是否结束了，如果结束了，设定并返回码，放在subprocess.returncode变量中
+    while sub.poll() is None:
+        print '+++++++++++='
+        # print sub.stdout
+        line = sub.stdout.read()
+        line = line.strip()
+        tmp = line.split("\n")
+        time.sleep(0.1)
+        # print 'line', line
+        if timeout:
+            if end_time <= datetime.datetime.now():
+                raise Exception("Timeout：%s" % cmdstring)
+    res['status'] = str(sub.returncode)
+    res['data'] = tmp
+    return res
+
+
 def create_file_hasan(host_ip, name, *args, **kwargs):
     print 'create_file_hasan', host_ip, name
     res = {

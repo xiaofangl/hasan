@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from views import Oper_ProjectInfo
 from admin import get_package_list
 from admin import format_url
+from run_ansible import _start_deploy
 
 
 def list(request):
@@ -98,6 +99,8 @@ def package_list(request):
 def run_deploy(request):
     json_data = json.loads(request.body)
     print 'run_deploy', json_data
+    _start_deploy(json_data, '')
+
 
 if __name__ == '__main__':
     pass

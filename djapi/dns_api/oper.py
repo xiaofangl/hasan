@@ -3,7 +3,7 @@
 # author: xiaofangliu
 
 from django.http import JsonResponse
-
+import commands
 from log.logging_conf import *
 from django.conf import settings
 from tools.helper import execute_command
@@ -85,6 +85,19 @@ def read_files(file_name):
     return all_list
 
 
+def update_branch(file_name):
+    # file_name = '' if not file_name else file_name
+    status, branch_p = commands.getstatusoutput("sed -n '3p' %s" % file_name)
+    # branch_p = 'sed -n "3p" %s' % file_name
+    _branch = int(branch_p.split(';')[0].strip()).__add__(1)
+    branch = '                        ' + str(_branch) + ' ' + ';' + branch_p.split(';')[1]
+    _cmd = 'sed -i -e "3s/^.*$/%s/" %s' % (branch, file_name)
+    res = execute_command(_cmd)
+    loger.info(_branch)
+    # loger.info('update branch success...')
+    return res
+
+
 def write_files(file_name, host, type, value, *args, **kwargs):
     res = {
         'status': True,
@@ -97,8 +110,14 @@ def write_files(file_name, host, type, value, *args, **kwargs):
     try:
         with open(file_name, 'a+') as f:
             f.write(one_line+'\n')
-        loger.info('write one item...')
-        loger.info(one_line)
+
+        res['status'] = update_branch(file_name)
+        if res['status']:
+            loger.info('write one item...')
+            loger.info(one_line)
+        else:
+            res['message'] = 'delect item false!!'
+            loger.info('update branch false...')
     except:
         res['status'] = False
         res['message'] = 'file wirte false！'
@@ -127,11 +146,16 @@ def mod_files(file_name, host, type, value, *args, **kwargs):
             execute_command(cmd_linux)
         else:
             execute_command(cmd_mac)
-        loger.info('delect item success!')
-        loger.info(rece_line)
+        res['status'] = update_branch(file_name)
+        if res['status']:
+            loger.info('delect item success!')
+            loger.info(rece_line)
+        else:
+            res['message'] = 'delect item false!!'
+            loger.info('update branch false...')
     except Exception as e:
         res['status'] = False
-        res['message'] = 'delect item success!!'
+        res['message'] = 'delect item false!!'
         loger.warning('delect item false!')
         loger.warning(rece_line)
     return res
@@ -423,5 +447,6 @@ def format_files(host, names, *args, **kwargs):
 if __name__ == '__main__':
     # read_files('172_huashenghaoche.com.zone')
     # read_files('192_huashenghaoche.com.zone')
-    print os.getcwd()
-    loger.info('statrt print log')
+    print 'this--', os.getcwd()
+    print '========='
+    # update_branch('../../upload_tmp/tmp.zone')

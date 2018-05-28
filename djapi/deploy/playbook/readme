@@ -1,0 +1,21 @@
+# python ansible PlayBook API
+
+``` this document describe python application ansible 1.9  ```
+
+## environment prepare
+	- python 2.7
+	- ansible 1.9
+	  * ansible hosts file (client address store)
+	  * playbook file, write yaml file
+	  * params, playbook.yml receive params
+## install
+    1. pip or other install ansible for python api;
+    2. editor ansible config file, test ansible ;
+    3. editor ansible hosts address store;
+    4. editor ansible playbook.yml file;
+
+
+
+
+
+

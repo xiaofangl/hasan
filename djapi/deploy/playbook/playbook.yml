@@ -1,20 +1,23 @@
 ---
-
 - name: get_package
-
+#  hosts: test
   hosts: "{{host}}"
+  remote_user: root
 
-  sudo: yes
+
 
   tasks:
-    - name: download "{{host}}"
+#      register: command_out
+#    - debug: var=command_out
+#    - shell: echo 'start----'
+#        - name: "download package..."
+#      - name: mv_old
+#        command: src="{{client_path}}"/"{{package_name}}" dest="{{client_path}}"/"{{package_name}}".bak
+      - name: download
+#        command: mv "{{client_path}}"/"{{package_name}}" "{{client_path}}"/"{{package_name}}".bak
+        command: wget -P "{{client_path}}" "{{package_url}}"
+        notify: tars
 
-      command: wget http://192.168.100.42:55555/download/huasheng_jave_test/hshc-regserver-1.0.0-SNAPSHOT.jar-.tat.gz /tmp
-#      command: tar zxvf /tmp/hshc-regserver-1.0.0-SNAPSHOT.jar-.tat.gz -C /opt
-      command: ifconfig
-      command: echo " this playbook yml"
-
-    - name: start server
-
-#       script: /tmp/start.sh
-      command: echo " this playbook yml server"
+  handlers:
+    - name: tars
+      command:  tar zxvf "{{client_path}}"/"{{package_name}}" -C "{{client_path}}"

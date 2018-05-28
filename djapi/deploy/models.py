@@ -64,8 +64,14 @@ class ProjectLog(models.Model):
 
 # 发布信息
 class DeployInfo(models.Model):
+    user = models.ManyToManyField(User)
+    host = models.CharField(max_length=125, null=True)
+    status = models.BooleanField(default=False)
     packges = models.CharField(max_length=30, null=True)
+    star_time = models.CharField(max_length=125, null=True)
+    end_time = models.CharField(max_length=125, null=True)
+    delta = models.CharField(max_length=125, null=True)
     deploy_env = models.CharField(max_length=30, null=True)
-    deploy_ip = models.CharField(max_length=30, null=True)
+    desc = models.CharField(max_length=512, null=True)
 
 
