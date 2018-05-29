@@ -35,4 +35,7 @@ GitLab-Runner
 # hasan（哈桑）——deploy 前端页面
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5223bb2b24ef0c831818712c8c991a026db3bb47
