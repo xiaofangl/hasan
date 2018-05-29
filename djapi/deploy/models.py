@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 
@@ -64,14 +65,21 @@ class ProjectLog(models.Model):
 
 # 发布信息
 class DeployInfo(models.Model):
-    user = models.ManyToManyField(User)
-    host = models.CharField(max_length=125, null=True)
+    # user = models.ForeignKey(User)
+    # project = models.ForeignKey(ProjectInfo)
+    host = models.CharField(max_length=125, null=True, default='')
     status = models.BooleanField(default=False)
-    packges = models.CharField(max_length=30, null=True)
-    star_time = models.CharField(max_length=125, null=True)
-    end_time = models.CharField(max_length=125, null=True)
-    delta = models.CharField(max_length=125, null=True)
-    deploy_env = models.CharField(max_length=30, null=True)
-    desc = models.CharField(max_length=512, null=True)
+    delta = models.CharField(max_length=125, null=True, default='')
+    deploy_env = models.CharField(max_length=30, null=True, default='pro')
+    desc = models.CharField(max_length=512, null=True, default='')
+    created = models.DateField(auto_now_add=True)
 
 
+class DeployProject(models.Model):
+   project = models.ForeignKey(ProjectInfo)
+   # user = models.ForeignKey(User)
+   host = models.CharField(max_length=30, default='', null=True)
+   package = models.CharField(max_length=125, default='', null=True)
+   status = models.BooleanField(False)
+   desc = models.CharField(max_length=125, default='', null=True)
+   created = models.DateTimeField(auto_now_add=True)

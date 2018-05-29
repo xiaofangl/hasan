@@ -7,6 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from django.conf import settings
 
+
 class Mail(object):
     def __init__(self, title, sender, addressee, content, *args, **kwargs):
         self.send_smtp = settings.MAIL_INFO.get('send_smtp')
@@ -48,4 +49,4 @@ class Mail(object):
 
 
 if __name__ == '__main__':
-    mail_test()
+    pass

@@ -5,12 +5,13 @@
 import os
 import redis
 import ansible.runner
+import Queue
 from ansible.playbook import PlayBook
 from ansible import callbacks
 from ansible import utils
 
 from models import DeployInfo
-from passport.models import userInfo
+from tools.connt_db import OperationRedis
 
 """
     this file provides python-ansible API support;
@@ -110,63 +111,68 @@ def ansible_command(host_list, mod='script', param=''):
     return res
 
 
-def get_userinfo(request):
-    username = request.META.get('HTTP_AUTHORIZATION', '')
-    user_id = userInfo.objects.filter(hashKey=username).values('user_id')
-    return user_id
-
-
 class PlaybookRunnerCallbacks(callbacks.PlaybookRunnerCallbacks):
     def __init__(self, stats, verbose=None):
         super(PlaybookRunnerCallbacks, self).__init__(stats, verbose)
         print 'os:', os.getcwd()
 
     def _inster_nosql(self, host, res):
-        r = redis.Redis(host='192.168.99.61', port=6379, db=0)
-        r.set(host, res)
+        # print 'inster nosql---', type(res), host, type(host)
+        # print res.get('changed')
+
+        r = OperationRedis()
+        if type(res) == dict:
+            status = res.get('changed')
+            # tmp[host] = status
+            cmd = res.get('cmd', '0')
+            if 'wget' == cmd[0]:
+                _key = cmd[3].split('download')[1].split('/')[1]
+                tmp = host + ' :: ' + str(status) + ','
+                if len(tmp) != 0:
+                    # print '_key', tmp
+                    r._append_data(_key, tmp)
 
     def _inster_db(self, host, res):
+
+        # print 'inster _inster_db---', type(res), host, type(host), res.get('changed'), \
+        #     res.get('delta', '0'), res.get('start', '0'), res.get('end', '0'), res.get('cmd', '0')
         host = '' if not host else host
-        print type(res)
-        std = res.get('stderr', 'stdout')
-        if res.get('changed'):
-            status = True
-        elif '100%' or '0K' in std:
-            status = True
+        tmp = {}
+        project_id = 2
+        if type(res) == dict:
+            status = res.get('changed')
+            # tmp[host] = status
+            delta = res.get('delta', '0')
+            cmd = res.get('cmd', '0')
+
+            DeployInfo.objects.create(host=host, status=status, delta=delta, desc=cmd)
+
         else:
-            status = False
-        packges = res.get('cmd', '')
-        start = res.get('start', '')
-        end = res.get('end', '')
-        delta = res.get('delta', '')
-        user_id = ''
-        DeployInfo.objects.get_or_create(user=user_id, host=host, status=status, packges=packges,\
-                                         start_time=start, end_time=end, delta=delta, deploy_env='pro',\
-                                         desc=std)
+            DeployInfo.objects.create(host=host, status=False, delta='1', desc=res)
 
     def on_ok(self, host, host_result):
         super(PlaybookRunnerCallbacks, self).on_ok(host, host_result)
         self._inster_nosql(host, host_result)
         self._inster_db(host, host_result)
-        print '===on_ok====host=%s===result=%s' % (host, host_result)
+        # print '===on_ok====host=%s===result=%s' % (host, host_result)
 
     def on_unreachable(self, host, results):
         super(PlaybookRunnerCallbacks, self).on_unreachable(host, results)
         self._inster_nosql(host, results)
         self._inster_db(host, results)
-        print '===on_unreachable====host=%s===result=%s' % (host, results)
+        # print '===on_unreachable====host=%s===result=%s' % (host, results)
 
     def on_failed(self, host, results, ignore_errors=False):
         super(PlaybookRunnerCallbacks, self).on_failed(host, results, ignore_errors)
         self._inster_nosql(host, results)
         self._inster_db(host, results)
-        print '===on_unreachable====host=%s===result=%s' % (host, results)
+        # print '===on_unreachable====host=%s===result=%s' % (host, results)
 
     def on_skipped(self, host, item=None):
         super(PlaybookRunnerCallbacks, self).on_skipped(host, item)
         self._inster_nosql(host, item)
         self._inster_db(host, item)
-        print "this task does not execute,please check parameter or condition."
+        # print "this task does not execute,please check parameter or condition."
 
 
 class PlaybookCallbacks(callbacks.PlaybookCallbacks):

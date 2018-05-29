@@ -99,8 +99,8 @@ def package_list(request):
 def run_deploy(request):
     json_data = json.loads(request.body)
     print 'run_deploy', json_data
-    _start_deploy(json_data, '')
-
+    res = _start_deploy(json_data, '')
+    return JsonResponse(res)
 
 if __name__ == '__main__':
     pass
