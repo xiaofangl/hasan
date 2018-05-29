@@ -4,15 +4,16 @@ this project use python api process the data, with the separation of web page fi
 
 # run it
 should run respectively python and web page; 
-**install**
+** install **
 install python depend， run it
 install Vuejs depend， run it
+---
 # hasan
-# deploy desciption
+# deploy desciption(hasan发布模块实现)
 # 原理
 
-** 通过监听 可控分支，实现自动构建 并部署到测试环境。（gitlab.yml）,并将构建包同步到 HTTP发布服务器**
-** 生产环境通过 HTTP发布服务器 自行编写发布流程（Python、ansible palybook.yml、Vue前端）**
+**通过监听 可控分支，实现自动构建 并部署到测试环境。（gitlab.yml）,并将构建包同步到 HTTP发布服务器**
+**生产环境通过 HTTP发布服务器 自行编写发布流程（Python、ansible palybook.yml、Vue前端**
 自动部署涉及了若干个角色，主要介绍如下：
 
 GitLab-CI
@@ -29,7 +30,7 @@ GitLab-Runner
 
 # 搭建步骤：
 
-** 基础服务环境 **
+**基础服务环境**
 	- 服务器之间需要 开启免密传输（基础环境）
 	- 要一套 Vue代码
 	- 一个gitlab 服务器1
