@@ -41,4 +41,5 @@ https://github.com/xiaofangl/hasan/blob/master/tupian/manage.jpeg
 https://github.com/xiaofangl/hasan/blob/master/tupian/deploy.jpeg
 https://github.com/xiaofangl/hasan/blob/master/tupian/choose_branch.jpeg
 https://github.com/xiaofangl/hasan/blob/master/tupian/deploy_end.jpeg
+ ![image](https://github.com/xiaofangl/hasan/blob/master/tupian/deploy_end.jpeg?raw=true)
 hasan/tupian/deploy_end.jpeg
