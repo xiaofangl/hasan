@@ -44,6 +44,7 @@ GitLab-Runner
 * 2）安装gitlab-runner ，执行器是gitlab-ci.yml实际执行者，需安装gitlab-ci.yml定义的相关构建环境，并想gitlab服务器注册；（以实现）
 * 3）编写gitlab-ci.yml 及相关shell脚本，gitlab-ci.yml 是监听 触发工作的核心。在gitlab-ci.yml可定义 不通的job, 如 build、deploy_test等；将所需的手动触发的操作，编写为相应的job。（以实现
 * 4）Python hasan 生产环境发布 构建好的项目包（已实现部分 还需权限矩阵模块 应用及其他季节API，版本升级）
+* 5) 操作日志以存入MySQL数据库，可提供后续统计分析及故障分析
 # hasan（哈桑）——deploy 前端页面
 
 
