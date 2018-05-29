@@ -1,5 +1,5 @@
 # python + vue project
-* 应用技术栈
+### 应用技术栈
 **vuejs2
 django
 python
@@ -20,6 +20,7 @@ element-ui
 ansible-playbook
 ansible
 fabric**
+---
 this project use python api process the data, with the separation of web page file;
 
 # run it
