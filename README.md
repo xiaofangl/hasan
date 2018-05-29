@@ -35,7 +35,10 @@ GitLab-Runner
 # hasan（哈桑）——deploy 前端页面
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5223bb2b24ef0c831818712c8c991a026db3bb47
+https://github.com/xiaofangl/hasan/blob/master/tupian/index.jpeg
+https://github.com/xiaofangl/hasan/blob/master/tupian/add.jpeg
+https://github.com/xiaofangl/hasan/blob/master/tupian/manage.jpeg
+https://github.com/xiaofangl/hasan/blob/master/tupian/deploy.jpeg
+https://github.com/xiaofangl/hasan/blob/master/tupian/choose_branch.jpeg
+https://github.com/xiaofangl/hasan/blob/master/tupian/deploy_end.jpeg
+<<<<<< HEAD
