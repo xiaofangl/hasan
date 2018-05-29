@@ -1,5 +1,25 @@
 # python + vue project
-
+* 应用技术栈
+**vuejs2
+django
+python
+gitlab-ci
+gitlab-runner
+nginx-proxy
+supervisor
+gunicorn
+nodejs
+apache
+rsync
+mysql
+redis
+vuex
+vue-router
+axios
+element-ui
+ansible-playbook
+ansible
+fabric**
 this project use python api process the data, with the separation of web page file;
 
 # run it
