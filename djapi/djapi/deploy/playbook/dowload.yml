@@ -1,0 +1,20 @@
+---
+# this is a test file...
+title:    My book
+
+author:
+        first_name: Liu
+        last_name: Shawna
+
+publish_date:    2018.05.03
+
+tasks:
+- name:  Download
+    service: wget package
+
+- name:
+    service: tar -c /root/html
+
+- name:
+    service: ./start.sh
+...
