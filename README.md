@@ -29,6 +29,12 @@ should run respectively python and web page;
 install python depend， run it
 install Vuejs depend， run it
 ---
+2018-06-05
+vue bus增加emit on 监听事件；
+login中增加user_group 信息，存储入前端localStorage,通过父组件emit传递组信息，子组件on接收 验证用户permission；
+前端所有模块增加 permission的状态管理；
+后端deploy模块增加新的部署日志；
+---
 # hasan
 # deploy desciption(hasan发布模块实现)
 # 原理
