@@ -77,7 +77,7 @@ class DeployInfo(models.Model):
 
 class DeployProject(models.Model):
    project = models.ForeignKey(ProjectInfo)
-   # user = models.ForeignKey(User)
+   user = models.ForeignKey(User)
    host = models.CharField(max_length=30, default='', null=True)
    package = models.CharField(max_length=125, default='', null=True)
    status = models.BooleanField(False)

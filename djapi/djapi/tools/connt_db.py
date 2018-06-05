@@ -50,7 +50,7 @@ class OperationRedis(object):
         except Exception as e:
 
             self.res['status'] = False
-            self.res['msg'] = e
+            self.res['msg'] = '_append_data failed ...'
         return self.res
 
     def _get_data(self, key):
@@ -63,7 +63,7 @@ class OperationRedis(object):
         except Exception as e:
 
             self.res['status'] = False
-            self.res['msg'] = e
+            self.res['msg'] = '_get_data failed ...'
         return self.res
 
     def _get_result(self, key):
@@ -72,7 +72,7 @@ class OperationRedis(object):
             tmp = _conn.get(key)
             print 'tmp:resis', tmp
             if tmp:
-                _tmp = tmp.split(',')
+                _tmp = tmp.split(';')
                 return _tmp
             else:
                 return False
@@ -88,7 +88,7 @@ class OperationRedis(object):
         except Exception as e:
 
             self.res['status'] = False
-            self.res['msg'] = e
+            self.res['msg'] = '_set_data failed ...'
         return self.res
 
     def _delete_data(self, key):
@@ -98,5 +98,5 @@ class OperationRedis(object):
             self.res['status'] = True
         except Exception as e:
             self.res['status'] = False
-            self.res['msg'] = e
+            self.res['msg'] = '_delete_data failed ...'
         return self.res

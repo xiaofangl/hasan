@@ -15,9 +15,9 @@
 #        command: src="{{client_path}}"/"{{package_name}}" dest="{{client_path}}"/"{{package_name}}".bak
       - name: download
 #        command: mv "{{client_path}}"/"{{package_name}}" "{{client_path}}"/"{{package_name}}".bak
-        command: wget -O tmp/"{{package_name}}" "{{package_url}}"
+        command: wget -O /tmp/"{{package_name}}" "{{package_url}}"
         notify: tars
 
   handlers:
     - name: tars
-      command:  tar zxvf tmp/"{{package_name}}" -C "{{client_path}}"
+      command:  tar zxvf /tmp/"{{package_name}}" -C "{{client_path}}"

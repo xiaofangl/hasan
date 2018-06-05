@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 # author: xiaofangliu
-import re
+
 import json
+from models import ProjectInfo
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -11,7 +12,6 @@ from admin import get_package_list
 from admin import format_url
 from run_ansible import _start_deploy
 
-from passport.apps import login_required_permission
 from passport.apps import login_required_hasan
 from passport.models import userInfo
 
@@ -28,6 +28,7 @@ def list(request):
 
 
 @csrf_exempt
+@login_required_hasan
 def add_item(request):
     json_data = json.loads(request.body)
     name = json_data.get('name', '')
@@ -47,8 +48,10 @@ def add_item(request):
 
 
 @csrf_exempt
+@login_required_hasan
 def mod_item(request):
     # print request
+
     if request.method == 'GET':
         ids = request.GET.get('0', '')
         ids = '' if not ids else ids
@@ -75,6 +78,7 @@ def mod_item(request):
 
 
 @csrf_exempt
+@login_required_hasan
 def del_item(request):
     print 'del_item'
     print request.GET.get('0', '')
@@ -85,6 +89,7 @@ def del_item(request):
 
 
 @csrf_exempt
+@login_required_hasan
 def package_list(request):
     json_data = json.loads(request.body)
     print 'json_data', json_data
@@ -102,10 +107,28 @@ def package_list(request):
 
 
 @csrf_exempt
+@login_required_hasan
 def run_deploy(request):
+    username = request.META.get('HTTP_AUTHORIZATION', '')
+    username = '' if not username else username
+    user_id = userInfo.objects.filter(hashKey=username).values('user_id', 'user__username')
+    print 'user_id', user_id, type(user_id[0]['user_id'])
     json_data = json.loads(request.body)
-    print 'run_deploy', json_data
-    res = _start_deploy(json_data, '')
+    # print 'run_deploy', json_data
+    id = json_data.get('id', '')
+    project = ProjectInfo.objects.get(is_del=False, id=id)
+    project.user.all()
+    _res = project.user.filter(id=user_id[0]['user_id'])
+    print 'project', _res
+    if _res:
+        json_data['user_id'] = user_id[0]['user_id']
+        res = _start_deploy(json_data, '')
+    else:
+        res = {
+            'status': False,
+            'msg': '%s 用户没有发布权限，请联系本项目的业务运维管理员 添加本业务的发布权限。。。' % user_id[0]['user__username']
+        }
+    # print res
     return JsonResponse(res)
 
 

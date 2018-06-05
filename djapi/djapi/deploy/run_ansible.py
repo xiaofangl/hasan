@@ -148,8 +148,8 @@ class PlaybookRunnerCallbacks(callbacks.PlaybookRunnerCallbacks):
                     r._append_data(_key, tmp)
         else:
             print 'on_unreachable'
-            tmp = host + ' :: ' + res + ','
-            r._set_data('result', tmp)
+            tmp = host + ' :: ' + res + ';'
+            r._append_data('result', tmp)
 
     def _inster_db(self, host, res):
 
@@ -230,8 +230,10 @@ def _playbook(params, play_file):
 
 # host_list
 def _start_deploy(json_data, play_file):
+    print 'json_data', json_data
     client_path = json_data.get('client_path', '/tmp')
     hosts = json_data.get('project_name', 'test')
+    user_id = json_data.get('user_id', '')
     # hosts = 'test'
     print hosts
     name = json_data.get('project_name', '')
@@ -245,47 +247,51 @@ def _start_deploy(json_data, play_file):
     r = OperationRedis()
     res = r._get_data(str(name))
     # res1 = r._get_data('result')
-    print 'res', res
+    # print 'res', res
     # print 'get_redis_data:', res1
-    for i in res['data']:
-        if len(i) != 0:
-            if i.split('::')[1]:
-                _host = i.split('::')[0]
-                _status = i.split('::')[1]
-                DeployProject.objects.create(project=ProjectInfo.objects.get(is_del=False, name=name), host=_host,
-                                             package=package_name,
-                                             status=_status)
-            else:
-                hosts = []
-                hosts.append(str(i.split('::')[0]))
-                params = '{"host": "%s", "package_url": "%s", "client_path": "%s", "package_name": "%s"}' % (
-                    hosts, package_url, client_path, package_name)
-                _playbook(params, play_file)
-                r = OperationRedis()
-                res = r._get_data(str(name))
-                for i in res['data']:
-                    if len(i) != 0:
-                        _host = i.split('::')[0]
-                        _status = i.split('::')[1]
-                        DeployProject.objects.create(project=ProjectInfo.objects.get(is_del=False, name=name),
-                                                     host=_host, package=package_name,
-                                                     status=_status)
-    r._delete_data(str(name))
-
-    _tmps = r._get_result("result")
-    print 'result', _tmps
-    if _tmps:
-        for i in _tmps:
+    if res['status']:
+        for i in res['data']:
             if len(i) != 0:
                 if i.split('::')[1]:
                     _host = i.split('::')[0]
                     _status = i.split('::')[1]
                     DeployProject.objects.create(project=ProjectInfo.objects.get(is_del=False, name=name), host=_host,
                                                  package=package_name,
-                                                 status=_status)
+                                                 status=_status, user_id=user_id)
+                else:
+                    hosts = []
+                    hosts.append(str(i.split('::')[0]))
+                    params = '{"host": "%s", "package_url": "%s", "client_path": "%s", "package_name": "%s"}' % (
+                        hosts, package_url, client_path, package_name)
+                    _playbook(params, play_file)
+                    r = OperationRedis()
+                    res = r._get_data(str(name))
+                    for i in res['data']:
+                        if len(i) != 0:
+                            _host = i.split('::')[0]
+                            _status = i.split('::')[1]
+                            DeployProject.objects.create(project=ProjectInfo.objects.get(is_del=False, name=name),
+                                                         host=_host, package=package_name,
+                                                         status=_status, user_id=user_id)
+    else:
+        res['data'] = []
+    r._delete_data(str(name))
 
-        res['data'].append(_tmps)
-        r._delete_data('result')
+    _tmps = r._get_result("result")
+    # print 'result', _tmps
+    if _tmps:
+        for i in _tmps:
+            if len(i) != 0:
+                # print '___________________________++'
+                # print 'i', i, i.split('::')[0]
+                _host = i.split('::')[0]
+                _status = False
+                DeployProject.objects.create(project=ProjectInfo.objects.get(is_del=False, name=name), host=_host,
+                                             package=package_name,
+                                             status=_status, user_id=user_id)
+
+                res['data'].append(i)
+    r._delete_data('result')
     print '___________________________'
     print 'redis::', res, type(res['data'])
     return res
